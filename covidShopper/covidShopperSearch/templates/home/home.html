@@ -2,15 +2,190 @@
 <html>
 <head>
   <title>CovidShopper</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600;700;900&display=swap');
+
+    html, body {
+        margin: 0px; padding: 0px
+        font-family: 'Poppins', sans-serif;
+    }
+
+    #map {
+      height: 100vh;
+      /* The height is 400 pixels */
+      width: 100vw;
+      /* The width is the width of the web page */
+    }
+
+    #sidebar {
+      z-index: 100;
+      position: fixed;
+      background-color:rgba(0,0,0,0.5);
+      width: 30vw;
+      height: 100vh;
+
+      /* text-align: center; */
+      font-family: 'Poppins', sans-serif;
+
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .title {
+      position: relative;
+      font-size: 3vw;
+      font-weight: 900;
+      color: #CCF2F4;
+      text-align: center;
+    }
+
+    .subTitle {
+      font-size: 1.5vw;
+      font-weight: 700;
+      color: #000000;
+    }
+
+    .paragraph {
+      position: relative;
+      top: -1.2vw;
+      font-size: 1vw;
+      font-weight: 500;
+      color: #000000;
+    }
+
+    .card {
+      width: 85%;
+      background-color: rgba(255,255,255,1);
+      border-radius: 20px;
+
+      padding-left: 15px;
+      padding-right: 15px;
+      padding-top: 1px;
+
+      margin: 0 auto;
+
+      transition: all ease-in-out 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      background-color: rgba(230,230,230,1);
+    }
+
+    .card:active {
+      transform: scale(1);
+    }
+
+    #optStore {
+      background-color: #CCF2F4;
+    }
+
+    #results {
+      padding-top: 10px;
+      position: absolute;
+      bottom: 0px;
+      height: 50vh;
+      width: 100%;
+      overflow-y: scroll;
+    }
+
+    /* Mobile Scaling */
+    @media screen and (max-width:500px){
+      #sidebar {
+        bottom: 0px;
+
+        width: 100vw;
+        height: 50vh;
+      }
+
+      #results {
+        height: 25vh;
+      }
+
+      .title {
+        font-size: 10vw;
+        top: -3vw;
+      }
+
+      .subTitle {
+        font-size: 2vh;
+      }
+
+      .paragraph {
+        top: -1.2vh;
+        font-size: 1.5vh;
+      }
+    }
+  </style>
+
 </head>
 <body>
 
-<h1>Search for Safe Shopping</h1>
-<p>Minimize spread, minimize your risk</p>
+<div id="sidebar">
+  <h1 class="title">CovidShopper</h1>
 
-{% for post in posts %}
-  <h1>{{ post.author }}</h1>
-{% endfor %}
+  <div id="results">
+    <div class="card" id="optStore">
+      <h1 class="subTitle">✦ Walmart</h1>
+      <p class="paragraph">123 Test Ave</p>
+    </div>
+
+    <div class="card">
+      <h1 class="subTitle">Walmart</h1>
+      <p class="paragraph">123 Test Ave</p>
+    </div>
+
+    <div class="card">
+      <h1 class="subTitle">Walmart</h1>
+      <p class="paragraph">123 Test Ave</p>
+    </div>
+
+    <div class="card">
+      <h1 class="subTitle">Walmart</h1>
+      <p class="paragraph">123 Test Ave</p>
+    </div>
+
+    <div class="card">
+      <h1 class="subTitle">Walmart</h1>
+      <p class="paragraph">123 Test Ave</p>
+    </div>
+  </div>
+
+</div>
+
+<div id="map"></div>
+
+
+
+
+
+
+
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtKtD-34ZgU456ON3tB4etofKoGTJ51T4&callback=initMap&libraries=&v=weekly"
+  async
+></script>
+
+
+<script>
+  // Initialize and add the map
+  function initMap() {
+    // The location of Uluru
+    const uluru = { lat: 53.524730, lng: -113.526370 };
+    // The map, centered at Uluru
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 10,
+      center: uluru,
+    });
+
+    // The marker, positioned at Uluru
+    const marker = new google.maps.Marker({
+      position: uluru,
+      map: map,
+    });
+  }
+</script>
 
 </body>
 </html>
