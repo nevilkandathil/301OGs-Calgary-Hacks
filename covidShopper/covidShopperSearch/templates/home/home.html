@@ -494,7 +494,7 @@
   <!-- Display before search -->
   <div id="searchBoxContainer">
     <div id="mc_embed_signup">
-      <form onsubmit="return search(document.getElementById('mce-EMAIL').value, document.getElementById('priority').value)" id="searchForum" class="form-inline">
+      <form onsubmit="return search(document.getElementById('mce-EMAIL').value, document.getElementById('priority').value, document.getElementById('dist').value)" id="searchForum" class="form-inline">
         <div id="mc_embed_signup_scroll">
 
           <input type="text" value="" name="Address" class="email" id="mce-EMAIL" placeholder="Address" required>
@@ -523,7 +523,7 @@
 
 
   <!-- <button class="stdBtn" onclick="search()" id="searchStdBtn">Search</button> -->
-  <button class="stdBtn" onclick="search(document.getElementById('mce-EMAIL').value, document.getElementById('priority').value)" id="searchStdBtn">Search</button>
+  <button class="stdBtn" onclick="search(document.getElementById('mce-EMAIL').value, document.getElementById('priority').value, document.getElementById('dist').value)" id="searchStdBtn">Search</button>
   <!-- type="submit" form="searchForum"-->
   <!-- Display before search -->
 
@@ -699,7 +699,7 @@
   }
 
 
-  function search(address, priority) {
+  function search(address, priority, radius) {
     var button = document.getElementById("searchStdBtn");
     var sidebar = document.getElementById("sidebar");
     var bg = document.getElementById("dimBG");
@@ -755,7 +755,7 @@
         map.setCenter(searchCoords);
 
 
-        searchNearbyStores(100, searchCoords, searchLat, searchLon, map, priority);
+        searchNearbyStores(radius*10, searchCoords, searchLat, searchLon, map, priority);
       }
     });
 
@@ -788,7 +788,7 @@
     // });
 
     const Http = new XMLHttpRequest();
-    const url='https://maps.googleapis.com/maps/api/place/textsearch/json?query=Grocery+Store&location=' + searchLat + ',' + searchLon + '&radius=100&key=AIzaSyCtKtD-34ZgU456ON3tB4etofKoGTJ51T4';
+    const url='https://maps.googleapis.com/maps/api/place/textsearch/json?query=Grocery+Store&location=' + searchLat + ',' + searchLon + '&' + radius + '&key=AIzaSyCtKtD-34ZgU456ON3tB4etofKoGTJ51T4';
     Http.open("GET", url);
     Http.send();
 
