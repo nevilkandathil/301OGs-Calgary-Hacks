@@ -315,15 +315,73 @@
       color: rgba(200,200,200,1);
     }
 
-    /* SEARCH TEXT FIELD */
+    #sliderLabel {
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 900;
+      font-family: 'Maven Pro', sans-serif;
+
+      position: absolute;
+      /* top: 0px; */
+      display: block;
+
+      color: #72ff00;
+    }
 
 
     #searchBoxContainer {
       position: relative;
       width: 75%;
       margin: 0 auto;
-      top: 3vh;
+      top: 1vh;
       /* background-color: rgba(255,0,0,0.5); */
+    }
+
+    .slider {
+      z-index: 101;
+      margin-top: 25px;
+      -webkit-appearance: none;
+      width: 100%;
+      height: 25px;
+      border-radius: 20px;
+      background: rgba(200,200,200,1);
+      outline: none;
+      position: relative;
+    }
+
+    .slider::-webkit-slider-thumb {
+      z-index: 103;
+      -webkit-appearance: none;
+      appearance: none;
+      width: 40px;
+      height: 25px;
+      border-radius: 20px;
+      background: #72ff00;
+      cursor: pointer;
+      position: relative;
+    }
+
+    #sldierHintCOVID {
+      z-index: 102;
+      pointer-events: none;
+      position: relative;
+      top: -48px;
+      left: 8px;
+
+      color: #ffffff;
+    }
+
+    #sldierHintDist {
+      /* background-color: rgba(255,0,0,0.5); */
+      width: 100%;
+      z-index: 102;
+      pointer-events: none;
+      position: relative;
+      top: -89px;
+      left: -4px;
+      text-align: right;
+
+      color: #ffffff;
     }
 
 
@@ -432,10 +490,10 @@
   <!-- Display before search -->
   <div id="searchBoxContainer">
     <div id="mc_embed_signup">
-      <form action="" method="" onsubmit="return search(document.getElementById('mce-EMAIL').value)" id="searchForum" class="form-inline">
+      <form action="" method="" onsubmit="return search(document.getElementById('mce-EMAIL').value, document.getElementById('priority').value)" id="searchForum" class="form-inline">
         <div id="mc_embed_signup_scroll">
 
-          <input type="text" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Address" required>
+          <input type="text" value="" name="Address" class="email" id="mce-EMAIL" placeholder="Address" required>
           <label for="mce-EMAIL" id="signupLabel">Address</label>
 
           <!-- <label for="dist">Max Distance (km):</label>
@@ -444,8 +502,12 @@
           <label for="time">Time Range (hr):</label>
           <input type="range" id="time" name="time" min="0" max="48"> -->
 
-          <!-- <label for="priority">Distance vs. COVID Priority:</label>
-          <input type="range" id="priority" name="priority" min="0" max="100"> -->
+          <div class="slidecontainer">
+            <label for="priority" id="sliderLabel">Priority</label>
+            <input class="slider" type="range" id="priority" name="priority" min="0" max="100" value="50">
+          </div>
+          <p id="sldierHintCOVID">COVID</p>
+          <p id="sldierHintDist">Distance</p>
 
         </div>
       </form>
@@ -454,7 +516,7 @@
 
 
   <!-- <button class="stdBtn" onclick="search()" id="searchStdBtn">Search</button> -->
-  <button class="stdBtn" onclick="search(document.getElementById('mce-EMAIL').value)" id="searchStdBtn">Search</button>
+  <button class="stdBtn" onclick="search(document.getElementById('mce-EMAIL').value, document.getElementById('priority').value)" id="searchStdBtn">Search</button>
   <!-- type="submit" form="searchForum"-->
   <!-- Display before search -->
 
@@ -578,7 +640,7 @@
   }
 
 
-  function search(address) {
+  function search(address, priority) {
     var button = document.getElementById("searchStdBtn");
     var sidebar = document.getElementById("sidebar");
     var bg = document.getElementById("dimBG");
@@ -610,7 +672,7 @@
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
 
         if(marker != null) {
-          marker.setMap(null);  
+          marker.setMap(null);
         }
 
         marker = new google.maps.Marker({
@@ -620,6 +682,11 @@
         map.setCenter(results[0].geometry.location);
       }
     });
+
+
+    // Here we handle the search, 0 priority => only care about covid, 100 => only do dist
+
+
 
     return false;
 
