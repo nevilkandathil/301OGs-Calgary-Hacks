@@ -527,14 +527,9 @@
 
   <!-- Display when searched -->
   <div id="results">
-    {% for i in locations %}
+    <!-- % include 'home/cards.html' % -->
 
-      <div class="card" id="optStore"  style="animation-delay: 0.3s">
-        <h1 class="subTitle">{{i.name}}</h1>
-        <p class="paragraph">{{i.addr}}</p>
-      </div>
-
-    {%endfor%}
+    return render(request, 'new_html.html',{'persons': persons if not isinstance(persons,models.Person) else [persons]})
 
 
 

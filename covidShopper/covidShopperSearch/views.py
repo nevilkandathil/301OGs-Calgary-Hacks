@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django import forms
 import operator
+import math
 
 class Location():
     def __init__(self, lat, lon, name, addr, dist, covid, score):
@@ -26,6 +27,9 @@ def home(request):
 
     f = CommentForm(auto_id=False)
 
+    context = {
+        'form': f,
+    }
 
     f = CommentForm(request.POST)
 
@@ -38,7 +42,8 @@ def home(request):
         addrs = f.cleaned_data["addrs"].split(";")
 
         for i in range(len(lats)-1):
-            euclidDistToStart = (float(startLatLon[0]) - float(lats[i]))**2 + (float(startLatLon[1]) - float(lons[i]))**2
+            # 111km in every degree of lon/lat
+            euclidDistToStart = round(111 * math.sqrt(((float(startLatLon[0]) - float(lats[i]))**2 + (float(startLatLon[1]) - float(lons[i]))**2)), 4)
 
             # Determine COVID Zone (Ramy)
             CovidScore = 1
@@ -54,10 +59,12 @@ def home(request):
 
         # Double check to make sure we are sorting lowest first, since lower => better
 
+        context2 = {
+            'locations': locations,
+            'form': f,
+        }
 
-    context = {
-        'locations': locations,
-        'form': f,
-    }
+        return render(request, "home/cards.html", context2)
+
 
     return render(request, "home/home.html", context)
