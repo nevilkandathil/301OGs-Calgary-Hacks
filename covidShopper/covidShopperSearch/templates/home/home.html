@@ -333,7 +333,7 @@
       position: relative;
       width: 75%;
       margin: 0 auto;
-      top: 1vh;
+      top: -2vh;
       /* background-color: rgba(255,0,0,0.5); */
     }
 
@@ -508,6 +508,15 @@
           </div>
           <p id="sldierHintCOVID">COVID</p>
           <p id="sldierHintDist">Distance</p>
+
+          <div style="position: relative; top: -105px;">
+            <div class="slidecontainer">
+              <label for="dist" id="sliderLabel">Max Distance</label>
+              <input class="slider" type="range" id="dist" name="dist" min="0" max="100" value="50">
+            </div>
+            <p id="sldierHintCOVID">1km</p>
+            <p id="sldierHintDist">100km</p>
+          </div>
 
         </div>
       </form>
@@ -741,18 +750,16 @@
     Http.send();
 
     Http.onreadystatechange = (e) => {
-      // console.log(Http.responseText)
+      // console.log(Http.responseText["results"])
 
-      var searchResults = JSON.parse(Http.responseText);
+      var results = JSON.parse(Http.responseText).results;
 
-      if (status === google.maps.places.PlacesServiceStatus.OK && searchResults.results) {
-        for (i = 0; i < searchResults.results.length; i++) {
-          console.log(i);
-          store = new google.maps.Marker({
-            position: searchResults.results[i].geometry.location,
-            map: map,
-          });
-        }
+      for (i = 0; i < results.length; i++) {
+        // console.log(i);
+        store = new google.maps.Marker({
+          position: results[i].geometry.location,
+          map: map,
+        });
       }
 
     }
