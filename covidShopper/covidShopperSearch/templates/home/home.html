@@ -18,18 +18,98 @@
       /* The width is the width of the web page */
     }
 
-    #sidebar {
+    /* Depricated */
+    /* #sidebar {
       z-index: 100;
       position: fixed;
       background-color:rgba(0,0,0,0.5);
       width: 30vw;
       height: 100vh;
 
-      /* text-align: center; */
       font-family: 'Poppins', sans-serif;
 
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+
+      opacity: 0;
+      animation-name: fadeIn;
+      animation-delay: 2s;
+      animation-duration: 0.5s;
+      animation-fill-mode: forwards;
+    } */
+    /* Depricated */
+
+    #sidebar {
+      /* Original position, changes in animation */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -20vh 0 0 -20vw;
+      width: 40vw;
+      height: 40vh;
+      border-radius: 50px;
+      /* Original position, changes in animation */
+
+      z-index: 100;
+      background-color:rgba(0,0,0,0.5);
+
+      font-family: 'Poppins', sans-serif;
+
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    #sidebar.searchAnimation {
+      animation-name: search;
+      /* animation-delay: 20s; */
+      animation-duration: 0.5s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+    }
+
+    #dimBG {
+      z-index: 1;
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.3);
+
+      transition: all 0.5s ease-in-out;
+    }
+
+    .stdBtn {
+      font-family: 'Poppins', sans-serif;
+      background-color: #CCF2F4;
+      border: none;
+      color: rgba(20,20,20,1);
+      text-align: center;
+      font-size: 3vw;
+      font-weight: 700;
+      font-size: 1vw;
+      border-radius: 20px;
+
+      position: absolute;
+      bottom: 4vh;
+
+      left: 8vw;
+
+
+      text-align: center;
+
+      width: 24vw;
+      height: 6vh;
+
+      opacity: 100;
+
+      transition: all 0.2s ease-in-out;
+    }
+
+    .stdBtn:hover {
+      transform: scale(1.05);
+    }
+
+    .stdBtn:active {
+      transform: scale(1);
     }
 
     .title {
@@ -66,6 +146,12 @@
       margin: 0 auto;
 
       transition: all ease-in-out 0.2s;
+
+      animation-name: fallIn;
+      animation-delay: 0.5s;
+      animation-duration: 0.2s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
     }
 
     .card:hover {
@@ -88,6 +174,46 @@
       height: 50vh;
       width: 100%;
       overflow-y: scroll;
+
+      visibility: hidden;
+
+      opacity: 0;
+    }
+
+    #result.searchAnimation {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    @keyframes fallIn {
+      0%{
+        opacity: 0%;
+        top: -5vh;
+      }
+      100%{
+        opacity: 100%;
+        top: 0;
+      }
+    }
+
+    @keyframes search {
+      0%{
+        height: 40vh;
+        width: 40vw;
+        top: 50%;
+        left: 50%;
+        margin: -20vh 0 0 -20vw;
+        border-radius: 50px;
+      }
+
+      100%{
+        height: 100vh;
+        width: 30vw;
+        top: 0%;
+        left: 0%;
+        margin: 0;
+        border-radius: 0px;
+      }
     }
 
     /* Mobile Scaling */
@@ -122,9 +248,18 @@
 </head>
 <body>
 
-<div id="sidebar">
-  <h1 class="title">CovidShopper</h1>
+<!-- <div id="fragment">
+  <h1 class="title">Covid Shopper</h1>
+</div> -->
 
+<div id="sidebar">
+  <h1 class="title">Covid Shopper</h1>
+  <!-- Display before search -->
+  <button class="stdBtn" onclick="search()" id="searchStdBtn">Search</button>
+  <!-- Display before search -->
+
+
+  <!-- Display when searched -->
   <div id="results">
     <div class="card" id="optStore">
       <h1 class="subTitle">✦ Walmart</h1>
@@ -150,15 +285,33 @@
       <h1 class="subTitle">Walmart</h1>
       <p class="paragraph">123 Test Ave</p>
     </div>
+    <!-- Display when searched -->
   </div>
 
 </div>
+
+<div id="dimBG"></div>
 
 <div id="map"></div>
 
 
 
 
+<!-- Control the search -->
+<script>
+  function search() {
+    var button = document.getElementById("searchStdBtn");
+    var sidebar = document.getElementById("sidebar");
+    var bg = document.getElementById("dimBG");
+    var results = document.getElementById("results");
+
+    sidebar.classList.add("searchAnimation");
+    results.classList.add("searchAnimation");
+    button.style.opacity = 0;
+    bg.style.opacity = 0;
+
+  }
+</script>
 
 
 
@@ -177,6 +330,9 @@
     const map = new google.maps.Map(document.getElementById("map"), {
       zoom: 10,
       center: uluru,
+      mapTypeControl: false,
+      // StreetViewControlOptions: false,
+      disableDefaultUI: true,
     });
 
     // The marker, positioned at Uluru
