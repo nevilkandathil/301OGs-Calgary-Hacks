@@ -49,7 +49,7 @@ def get_latest_zone_data(zone_name, zone_url):
     
     # update infection rate to json obj
     updated_data = find_infection_rate(zone_name, json_obj)
-    print(updated_data)
+    # print(updated_data)
     return updated_data
 
 def find_infection_rate(zone_name, data_set):
@@ -84,5 +84,5 @@ def get_data():
 
     return all_zones
 
-print(get_data())
+# print(get_data())
 
