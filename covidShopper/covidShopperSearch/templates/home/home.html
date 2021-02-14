@@ -74,7 +74,14 @@
       height: 100vh;
       background-color: rgba(0,0,0,0.3);
 
-      transition: all 0.5s ease-in-out;
+      /* transition: all 0.5s ease-in-out; */
+    }
+
+    #dimBG.searchAnimation {
+      animation-name: disableElement;
+      animation-duration: 0.5s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
     }
 
     .stdBtn {
@@ -145,10 +152,15 @@
 
       margin: 0 auto;
 
+      position: relative;
+
       transition: all ease-in-out 0.2s;
 
+      opacity: 0;
+      display: none;
+
       animation-name: fallIn;
-      animation-delay: 0.5s;
+      animation-delay: 0.3s;
       animation-duration: 0.2s;
       animation-timing-function: ease-in-out;
       animation-fill-mode: forwards;
@@ -175,14 +187,40 @@
       width: 100%;
       overflow-y: scroll;
 
-      visibility: hidden;
-
-      opacity: 0;
+      /* opacity: 0; */
+      height: 0vh;
     }
 
-    #result.searchAnimation {
-      visibility: visible;
-      opacity: 1;
+    #results.searchAnimation {
+      animation-name: enableElement;
+      animation-delay: 0.1s;
+      animation-duration: 0s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes disableElement {
+      0% {
+        opacity: 1;
+      }
+      99% {
+        height: 100%;
+      }
+      100% {
+        opacity: 0;
+        height: 0;
+      }
+    }
+
+    @keyframes enableElement {
+      0% {
+        opacity: 0;
+        height: 0vh;
+      }
+      100% {
+        opacity: 1;
+        height: 50vh;
+      }
     }
 
     @keyframes fallIn {
@@ -261,27 +299,27 @@
 
   <!-- Display when searched -->
   <div id="results">
-    <div class="card" id="optStore">
+    <div class="card" id="optStore"  style="animation-delay: 0.3s">
       <h1 class="subTitle">✦ Walmart</h1>
       <p class="paragraph">123 Test Ave</p>
     </div>
 
-    <div class="card">
+    <div class="card" style="animation-delay: 0.4s">
       <h1 class="subTitle">Walmart</h1>
       <p class="paragraph">123 Test Ave</p>
     </div>
 
-    <div class="card">
+    <div class="card" style="animation-delay: 0.5s">
       <h1 class="subTitle">Walmart</h1>
       <p class="paragraph">123 Test Ave</p>
     </div>
 
-    <div class="card">
+    <div class="card" style="animation-delay: 0.6s">
       <h1 class="subTitle">Walmart</h1>
       <p class="paragraph">123 Test Ave</p>
     </div>
 
-    <div class="card">
+    <div class="card" style="animation-delay: 0.7s">
       <h1 class="subTitle">Walmart</h1>
       <p class="paragraph">123 Test Ave</p>
     </div>
@@ -304,11 +342,18 @@
     var sidebar = document.getElementById("sidebar");
     var bg = document.getElementById("dimBG");
     var results = document.getElementById("results");
+    var cards = document.getElementsByClassName("card");
 
     sidebar.classList.add("searchAnimation");
     results.classList.add("searchAnimation");
+    bg.classList.add("searchAnimation");
+
+    for(var i=0; i < cards.length; i++) {
+      cards[i].style.display = "block";
+      // cards[i].style.animationDelay = toString(i*1 + 0.5) + "s";
+    }
+
     button.style.opacity = 0;
-    bg.style.opacity = 0;
 
   }
 </script>
