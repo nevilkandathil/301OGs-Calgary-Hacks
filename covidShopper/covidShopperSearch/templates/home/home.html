@@ -432,7 +432,7 @@
   <!-- Display before search -->
   <div id="searchBoxContainer">
     <div id="mc_embed_signup">
-      <form action="" method="" id="searchForum" class="form-inline">
+      <form action="" method="" onsubmit="return search(document.getElementById('mce-EMAIL').value)" id="searchForum" class="form-inline">
         <div id="mc_embed_signup_scroll">
 
           <input type="text" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Address" required>
@@ -515,6 +515,7 @@
 
 <script>
   var map
+  var marker
 
   // Initialize and add the map
   function initMap() {
@@ -608,13 +609,19 @@
     service.findPlaceFromQuery(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
 
-        const marker = new google.maps.Marker({
+        if(marker != null) {
+          marker.setMap(null);  
+        }
+
+        marker = new google.maps.Marker({
           position: results[0].geometry.location,
           map: map,
         });
         map.setCenter(results[0].geometry.location);
       }
     });
+
+    return false;
 
   }
 
