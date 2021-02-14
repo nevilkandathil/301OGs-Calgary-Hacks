@@ -574,14 +574,13 @@
   async
 ></script>
 
-
 <script>
   var map
   var marker
+  var searchCoords
 
   // Initialize and add the map
   function initMap() {
-    // The location of Uluru
     const edmonton = { lat: 53.524730, lng: -113.526370 };
     const blairmore = { lat: 49.6103, lng: -114.4512};
 
@@ -594,6 +593,19 @@
       // StreetViewControlOptions: false,
     });
 
+
+
+    // var directions = new GDirections ();
+    //
+    // var wp = new Array ();
+    // wp[0] = new GLatLng(53.524730,-113.526370);
+    // wp[1] = new GLatLng(49.6103,-114.4512);
+    // directions.loadFromWaypoints(wp);
+    //
+    //
+    // GEvent.addListener(directions, "load", function() {
+    //     console.log(directions.getDuration().seconds + " seconds");
+    // });
 
     // ONLY WORKS FOR HTTPS
 
@@ -675,13 +687,21 @@
           marker.setMap(null);
         }
 
+        searchCoords = results[0].geometry.location;
+
+        // console.log(searchCoords)
+
         marker = new google.maps.Marker({
-          position: results[0].geometry.location,
+          position: searchCoords,
           map: map,
         });
-        map.setCenter(results[0].geometry.location);
+        map.setCenter(searchCoords);
+
+
+        searchNearbyStores(100, searchCoords, map);
       }
     });
+
 
 
     // Here we handle the search, 0 priority => only care about covid, 100 => only do dist
@@ -690,6 +710,52 @@
 
     return false;
 
+  }
+
+  function searchNearbyStores(radius, searchCoords, map) {
+    const genericSearch = {
+      query: "Grocery Store",
+      fields: ["name", "geometry"],
+      locationBias: {radius: radius, center: searchCoords},
+    };
+
+    // service = new google.maps.places.PlacesService(map);
+
+    // service.findPlaceFromQuery(genericSearch, (results, status) => {
+    //
+    //   if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+    //     for (i = 0; i < results.length; i++) {
+    //       console.log(i);
+    //       store = new google.maps.Marker({
+    //         position: results[i].geometry.location,
+    //         map: map,
+    //       });
+    //     }
+    //     // map.setCenter(results[0].geometry.location);
+    //   }
+    // });
+
+    const Http = new XMLHttpRequest();
+    const url='https://maps.googleapis.com/maps/api/place/textsearch/json?query=Grocery+Store&location=53.524730,-113.526370&radius=100&key=AIzaSyCtKtD-34ZgU456ON3tB4etofKoGTJ51T4';
+    Http.open("GET", url);
+    Http.send();
+
+    Http.onreadystatechange = (e) => {
+      // console.log(Http.responseText)
+
+      var searchResults = JSON.parse(Http.responseText);
+
+      if (status === google.maps.places.PlacesServiceStatus.OK && searchResults.results) {
+        for (i = 0; i < searchResults.results.length; i++) {
+          console.log(i);
+          store = new google.maps.Marker({
+            position: searchResults.results[i].geometry.location,
+            map: map,
+          });
+        }
+      }
+
+    }
   }
 
 </script>
