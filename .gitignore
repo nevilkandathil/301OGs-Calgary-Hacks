@@ -1,4 +1,5 @@
-covidShopper/__pycache__/
-covidShopperSearch/__pycache_/
+covidShopper/covidShopper/__pycache__/
+covidShopper/covidShopperSearch/__pycache_/
+covidShopper/migrations/__pycache__/
 covidShopper/.vscode/
 
