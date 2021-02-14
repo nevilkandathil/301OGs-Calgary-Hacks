@@ -149,6 +149,9 @@
       font-size: 1vw;
       font-weight: 500;
       color: #000000;
+      /* background-color: rgba(255,0,0,0.5); */
+      margin-top: 0px;
+      margin-bottom: 0px;
     }
 
     .card {
@@ -161,6 +164,7 @@
       padding-top: 1px;
 
       margin: 0 auto;
+      margin-bottom: 10px;
 
       position: relative;
 
@@ -193,7 +197,7 @@
       padding-top: 10px;
       position: absolute;
       bottom: 0px;
-      height: 50vh;
+      height: 70vh;
       width: 100%;
       overflow-y: scroll;
 
@@ -405,7 +409,7 @@
       }
       100% {
         opacity: 1;
-        height: 50vh;
+        height: 70vh;
       }
     }
 
@@ -529,37 +533,54 @@
   <div id="results">
     <!-- % include 'home/cards.html' % -->
 
-    return render(request, 'new_html.html',{'persons': persons if not isinstance(persons,models.Person) else [persons]})
+    <!-- return render(request, 'new_html.html',{'persons': persons if not isinstance(persons,models.Person) else [persons]}) -->
 
 
 
 
 
 
-    <!-- <div class="card" id="optStore"  style="animation-delay: 0.3s">
+    <div class="card" id="optStore"  style="animation-delay: 0.3s">
       <h1 class="subTitle">✦ Walmart</h1>
       <p class="paragraph">123 Test Ave</p>
+      <p class="paragraph">Distance: 0.230km, COVID score: 20</p>
     </div>
 
     <div class="card" style="animation-delay: 0.4s">
-      <h1 class="subTitle">Walmart</h1>
+      <h1 class="subTitle">Safeway Garneau</h1>
       <p class="paragraph">123 Test Ave</p>
+      <p class="paragraph">Distance: 1.304km, COVID score: 22</p>
     </div>
 
     <div class="card" style="animation-delay: 0.5s">
-      <h1 class="subTitle">Walmart</h1>
+      <h1 class="subTitle">Save-On-Foods</h1>
       <p class="paragraph">123 Test Ave</p>
+      <p class="paragraph">Distance: 0.730km, COVID score: 40</p>
     </div>
 
     <div class="card" style="animation-delay: 0.6s">
-      <h1 class="subTitle">Walmart</h1>
+      <h1 class="subTitle">Evoolution</h1>
       <p class="paragraph">123 Test Ave</p>
+      <p class="paragraph">Distance: 8.243km, COVID score: 6</p>
     </div>
 
     <div class="card" style="animation-delay: 0.7s">
-      <h1 class="subTitle">Walmart</h1>
+      <h1 class="subTitle">Central market</h1>
       <p class="paragraph">123 Test Ave</p>
-    </div> -->
+      <p class="paragraph">Distance: 2.266km, COVID score: 18</p>
+    </div>
+
+    <div class="card" style="animation-delay: 0.8s">
+      <h1 class="subTitle">H MART</h1>
+      <p class="paragraph">123 Test Ave</p>
+      <p class="paragraph">Distance: 4.623km, COVID score: 34</p>
+    </div>
+
+    <div class="card" style="animation-delay: 0.9s">
+      <h1 class="subTitle">Earth's General Store</h1>
+      <p class="paragraph">123 Test Ave</p>
+      <p class="paragraph">Distance: 5.236km, COVID score: 69</p>
+    </div>
     <!-- Display when searched -->
   </div>
 
@@ -602,6 +623,8 @@
   var map
   var marker
   var searchCoords
+  var searchLat
+  var searchLon
 
   // Initialize and add the map
   function initMap() {
@@ -715,6 +738,16 @@
 
         // console.log(searchCoords)
 
+        searchLat = results[0].geometry.location["lat"];
+        searchLon = results[0].geometry.location["lon"];
+        searchLat = 53.524730
+        searchLon = -113.526370
+
+        // console.log("b4")
+        // console.log(searchLat)
+        // console.log(searchLon)
+        // console.log("after")
+
         marker = new google.maps.Marker({
           position: searchCoords,
           map: map,
@@ -722,7 +755,7 @@
         map.setCenter(searchCoords);
 
 
-        searchNearbyStores(100, searchCoords, map, priority);
+        searchNearbyStores(100, searchCoords, searchLat, searchLon, map, priority);
       }
     });
 
@@ -731,7 +764,7 @@
 
   }
 
-  function searchNearbyStores(radius, searchCoords, map, priority) {
+  function searchNearbyStores(radius, searchCoords, searchLat, searchLon, map, priority) {
     // const genericSearch = {
     //   query: "Grocery Store",
     //   fields: ["name", "geometry"],
@@ -755,14 +788,15 @@
     // });
 
     const Http = new XMLHttpRequest();
-    const url='https://maps.googleapis.com/maps/api/place/textsearch/json?query=Grocery+Store&location=53.524730,-113.526370&radius=100&key=AIzaSyCtKtD-34ZgU456ON3tB4etofKoGTJ51T4';
+    const url='https://maps.googleapis.com/maps/api/place/textsearch/json?query=Grocery+Store&location=' + searchLat + ',' + searchLon + '&radius=100&key=AIzaSyCtKtD-34ZgU456ON3tB4etofKoGTJ51T4';
     Http.open("GET", url);
     Http.send();
 
     Http.onreadystatechange = (e) => {
       // console.log(Http.responseText["results"])
 
-      var startLatLon = "53.524730;-113.526370"
+      // var startLatLon = "53.524730;-113.526370"
+      var startLatLon = searchLat + ";" + searchLon
       var lats = ""
       var lons = ""
       var names = ""
