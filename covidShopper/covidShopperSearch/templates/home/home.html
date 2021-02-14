@@ -209,6 +209,124 @@
       animation-fill-mode: forwards;
     }
 
+
+
+
+    /* SEARCH TEXT FIELD */
+
+
+    #mailingListSignup {
+      position: absolute;
+
+      top: 200px;
+      left: 46%;
+      transform: translate(-50%, -50%);
+
+      /* background-color: red; */
+      opacity: 0;
+    }
+
+    /* Make the form inline */
+    #mc_embed_signup {
+      clear: left;
+    }
+
+    /* Change autocomplete styles in WebKit */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+      -webkit-text-fill-color: rgba(255,255,255,1);
+      -webkit-box-shadow: 0 0 0px 1000px rgba(48,48,48,1) inset;
+    }
+
+    #mce-EMAIL {
+      font-size: 24px;
+      font-weight: 900;
+      font-family: 'Maven Pro', sans-serif;
+
+      width: 100%;
+      border: 0;
+      border-bottom: 2px solid rgba(200,200,200,1);
+      outline: 0;
+      color: rgba(255,255,255,1);
+      background: transparent;
+      transition: border-color 0.2s;
+    }
+
+    #mce-EMAIL::placeholder {
+      color: transparent;
+    }
+
+    /* Update the text box */
+    #mce-EMAIL:focus,
+    #mce-EMAIL:valid {
+      border-image: linear-gradient(to right, #43ff00, #16faab);
+      border-image-slice: 1;
+    }
+
+    #mce-EMAIL:focus:invalid,
+    #mce-EMAIL:not(:placeholder-shown):invalid {
+      border-image: linear-gradient(to right, #ff0000, #f900a6);
+      border-image-slice: 1;
+    }
+
+    /* Update the label */
+    #mce-EMAIL:focus + #signupLabel,
+    #mce-EMAIL:valid + #signupLabel {
+      position: absolute;
+      top: -15px;
+      display: block;
+
+      transition: 0.2s;
+      font-size: 12px;
+      color: #72ff00;
+      font-weight:700;
+    }
+
+    #mce-EMAIL:focus:invalid + #signupLabel,
+    #mce-EMAIL:not(:placeholder-shown):invalid + #signupLabel {
+      position: absolute;
+      top: -15px;
+      display: block;
+
+      transition: 0.2s;
+      font-size: 12px;
+      color: #ff0000;
+      font-weight:700;
+    }
+
+
+    #signupLabel {
+      font-size: 24px;
+      font-weight: 900;
+      font-family: 'Maven Pro', sans-serif;
+
+      position: absolute;
+      top: 0px;
+      display: block;
+      transition: 0.2s;
+
+      color: rgba(200,200,200,1);
+    }
+
+    /* SEARCH TEXT FIELD */
+
+
+    #searchBoxContainer {
+      position: relative;
+      width: 75%;
+      margin: 0 auto;
+      top: 3vh;
+      /* background-color: rgba(255,0,0,0.5); */
+    }
+
+
     @keyframes disableElement {
       0% {
         opacity: 1;
@@ -309,14 +427,35 @@
 </head>
 <body onload="init();">
 
-<!-- <div id="fragment">
-  <h1 class="title">Covid Shopper</h1>
-</div> -->
-
 <div id="sidebar">
   <h1 class="title">Covid Shopper</h1>
   <!-- Display before search -->
-  <button class="stdBtn" onclick="search()" id="searchStdBtn">Search</button>
+  <div id="searchBoxContainer">
+    <div id="mc_embed_signup">
+      <form action="" method="" onsubmit="return search(document.getElementById('mce-EMAIL').value)" id="searchForum" class="form-inline">
+        <div id="mc_embed_signup_scroll">
+
+          <input type="text" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Address" required>
+          <label for="mce-EMAIL" id="signupLabel">Address</label>
+
+          <!-- <label for="dist">Max Distance (km):</label>
+          <input type="range" id="dist" name="dist" min="10" max="100">
+
+          <label for="time">Time Range (hr):</label>
+          <input type="range" id="time" name="time" min="0" max="48"> -->
+
+          <!-- <label for="priority">Distance vs. COVID Priority:</label>
+          <input type="range" id="priority" name="priority" min="0" max="100"> -->
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- <button class="stdBtn" onclick="search()" id="searchStdBtn">Search</button> -->
+  <button class="stdBtn" onclick="search(document.getElementById('mce-EMAIL').value)" id="searchStdBtn">Search</button>
+  <!-- type="submit" form="searchForum"-->
   <!-- Display before search -->
 
 
@@ -365,9 +504,81 @@
   }
 </script>
 
-<!-- Start the search -->
+
+
+<!-- src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtKtD-34ZgU456ON3tB4etofKoGTJ51T4&callback=initMap&libraries=&v=weekly" -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtKtD-34ZgU456ON3tB4etofKoGTJ51T4&callback=initMap&libraries=places"
+  async
+></script>
+
+
 <script>
-  function search() {
+  var map
+  var marker
+
+  // Initialize and add the map
+  function initMap() {
+    // The location of Uluru
+    const edmonton = { lat: 53.524730, lng: -113.526370 };
+    const blairmore = { lat: 49.6103, lng: -114.4512};
+
+    // Create the map focused on Edmonton
+    map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 10,
+      center: { lat: 53.524730, lng: -113.526370 },
+      mapTypeControl: false,
+      disableDefaultUI: true,
+      // StreetViewControlOptions: false,
+    });
+
+
+    // ONLY WORKS FOR HTTPS
+
+    // if (navigator.geolocation) {
+    //   navigator.geolocation.getCurrentPosition(
+    //     (position) => {
+    //       const pos = {
+    //         lat: position.coords.latitude,
+    //         lng: position.coords.longitude,
+    //       };
+    //       infoWindow.setPosition(pos);
+    //       infoWindow.setContent("Location found.");
+    //       infoWindow.open(map);
+    //       map.setCenter(pos);
+    //     },
+    //     () => {
+    //       handleLocationError(true, infoWindow, map.getCenter());
+    //     }
+    //   );
+    // } else {
+    //   // Browser doesn't support Geolocation
+    //   handleLocationError(false, infoWindow, map.getCenter());
+    // }
+
+    // ONLY WORKS FOR HTTPS
+
+
+    // const request = {
+    //   query: "Calgary, ab",
+    //   fields: ["name", "geometry"],
+    // };
+    //
+    // service = new google.maps.places.PlacesService(map);
+    // service.findPlaceFromQuery(request, (results, status) => {
+    //   if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+    //
+    //     const marker = new google.maps.Marker({
+    //       position: results[0].geometry.location,
+    //       map: map,
+    //     });
+    //     map.setCenter(results[0].geometry.location);
+    //   }
+    // });
+  }
+
+
+  function search(address) {
     var button = document.getElementById("searchStdBtn");
     var sidebar = document.getElementById("sidebar");
     var bg = document.getElementById("dimBG");
@@ -381,42 +592,39 @@
 
     for(var i=0; i < cards.length; i++) {
       cards[i].style.display = "block";
-      // cards[i].style.animationDelay = toString(i*1 + 0.5) + "s";
     }
 
     button.style.opacity = 0;
 
-  }
-</script>
 
 
 
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtKtD-34ZgU456ON3tB4etofKoGTJ51T4&callback=initMap&libraries=&v=weekly"
-  async
-></script>
+    const request = {
+      query: address,
+      fields: ["name", "geometry"],
+    };
 
+    service = new google.maps.places.PlacesService(map);
 
-<script>
-  // Initialize and add the map
-  function initMap() {
-    // The location of Uluru
-    const uluru = { lat: 53.524730, lng: -113.526370 };
-    // The map, centered at Uluru
-    const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 10,
-      center: uluru,
-      mapTypeControl: false,
-      // StreetViewControlOptions: false,
-      disableDefaultUI: true,
+    service.findPlaceFromQuery(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+
+        if(marker != null) {
+          marker.setMap(null);  
+        }
+
+        marker = new google.maps.Marker({
+          position: results[0].geometry.location,
+          map: map,
+        });
+        map.setCenter(results[0].geometry.location);
+      }
     });
 
-    // The marker, positioned at Uluru
-    const marker = new google.maps.Marker({
-      position: uluru,
-      map: map,
-    });
+    return false;
+
   }
+
 </script>
 
 </body>
