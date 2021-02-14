@@ -57,6 +57,16 @@
 
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+
+      opacity: 0;
+    }
+
+    #sidebar.initAnimation {
+      animation-name: fallInMain;
+      animation-delay: 0s;
+      animation-duration: 0.5s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
     }
 
     #sidebar.searchAnimation {
@@ -234,6 +244,17 @@
       }
     }
 
+    @keyframes fallInMain {
+      0%{
+        opacity: 0%;
+        top: 40%;
+      }
+      100%{
+        opacity: 100%;
+        top: 50%;
+      }
+    }
+
     @keyframes search {
       0%{
         height: 40vh;
@@ -242,6 +263,7 @@
         left: 50%;
         margin: -20vh 0 0 -20vw;
         border-radius: 50px;
+        opacity: 1;
       }
 
       100%{
@@ -251,6 +273,7 @@
         left: 0%;
         margin: 0;
         border-radius: 0px;
+        opacity: 1;
       }
     }
 
@@ -284,7 +307,7 @@
   </style>
 
 </head>
-<body>
+<body onload="init();">
 
 <!-- <div id="fragment">
   <h1 class="title">Covid Shopper</h1>
@@ -333,9 +356,16 @@
 <div id="map"></div>
 
 
+<!-- Initial animation -->
+<script>
+  function init() {
+    var sidebar = document.getElementById("sidebar");
 
+    sidebar.classList.add("initAnimation");
+  }
+</script>
 
-<!-- Control the search -->
+<!-- Start the search -->
 <script>
   function search() {
     var button = document.getElementById("searchStdBtn");
@@ -344,6 +374,7 @@
     var results = document.getElementById("results");
     var cards = document.getElementsByClassName("card");
 
+    sidebar.classList.remove("initAnimation");
     sidebar.classList.add("searchAnimation");
     results.classList.add("searchAnimation");
     bg.classList.add("searchAnimation");
